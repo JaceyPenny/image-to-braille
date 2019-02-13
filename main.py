@@ -303,7 +303,10 @@ def get_character_for_location(size, pixels, x, y) -> chr:
             if i >= size[0] or j >= size[1]:
                 gray = 0
             else:
-                r, g, b = pixels[i, j]
+                try:
+                    r, g, b = pixels[i, j]
+                except:
+                    r, g, b, _ = pixels[i, j]
                 gray = gray_value(r, g, b)
 
             if INVERT:
