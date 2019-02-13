@@ -284,7 +284,6 @@ def region_to_string(region) -> str:
 
 def region_to_ascii(region) -> chr:
     bitstring = region_to_string(region)
-    print(bitstring)
     return character_map[bitstring]
 
 
