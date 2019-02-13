@@ -10,7 +10,7 @@ parser.add_argument('--scale', '-s', type=float, default=1.0, help='the scale fa
 parser.add_argument('--invert', '-i', action='store_true', help='whether or not to invert the output (turn white to black and vice versa)')
 
 character_map = {
-    '00 00 00 00': '⢀',
+    '00 00 00 00': '.',
     '00 00 00 01': '⢀',
     '00 00 00 10': '⡀',
     '00 00 00 11': '⣀',
@@ -313,14 +313,28 @@ def get_character_for_location(size, pixels, x, y) -> chr:
 
     return region_to_ascii(region)
 
+def fix_spaces(output, length, height):
+    for y in range(0, height):
+        last_meaningful = length - 1
+        for x in reversed(range(length)):
+            if output[y][x] != '.':
+                break
+            last_meaningful = x
+        output[y] = output[y][0:last_meaningful]
+
+    for y in range(0, height):
+        for x in range(0, len(output[y])):
+            if output[y][x] == '.':
+                output[y][x] = '⢀'
+
 
 image = Image.open(image_file_name)
 
 width, height = image.size
-image.thumbnail((width * SCALE * 1.1, height * SCALE), Image.ANTIALIAS)
+image.thumbnail((width * SCALE, height * SCALE), Image.ANTIALIAS)
 pixels = image.load()
 
-width = width * SCALE * 1.1
+width = width * SCALE
 height = height * SCALE
 output_width = math.ceil(width / 2)
 output_height = math.ceil(height / 4)
@@ -330,6 +344,8 @@ output = [[' ' for _ in range(0, output_width)] for _ in range(0, output_height)
 for x in range(0, output_width):
     for y in range(0, output_height):
         output[y][x] = get_character_for_location(image.size, pixels, x * 2, y * 4)
+
+fix_spaces(output, output_width, output_height)
 
 for x in range(0, len(output)):
     print(''.join(output[x]))
