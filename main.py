@@ -7,6 +7,7 @@ parser = argparse.ArgumentParser(description='Converts images to dotted ASCII ar
 parser.add_argument('image', metavar='IMAGE', type=str, help='the image to convert')
 parser.add_argument('--threshold', '-t', type=int, default=90, help='the lightness threshold for writing a dot')
 parser.add_argument('--scale', '-s', type=float, default=1.0, help='the scale factor before conversion')
+parser.add_argument('--invert', '-i', type=boolean, default=False, help='whether or not to invert the output (turn white to black and vice versa)')
 
 character_map = {
     '00 00 00 00': ' ',
@@ -271,6 +272,7 @@ args = parser.parse_args()
 image_file_name = args.image
 THRESHOLD = args.threshold
 SCALE = args.scale
+INVERT = args.invert
 
 
 def gray_value(r: int, g: int, b: int) -> int:
@@ -304,7 +306,10 @@ def get_character_for_location(size, pixels, x, y) -> chr:
                 r, g, b = pixels[i, j]
                 gray = gray_value(r, g, b)
 
-            (region[j - y])[i - x] = '0' if gray < THRESHOLD else '1'
+            if INVERT:
+                (region[j-y])[i-x] = '1' if gray < THRESHOLD else '0'
+            else:
+                (region[j-y])[i-x] = '0' if gray < THRESHOLD else '1'
 
     return region_to_ascii(region)
 
