@@ -10,7 +10,7 @@ parser.add_argument('--scale', '-s', type=float, default=1.0, help='the scale fa
 parser.add_argument('--invert', '-i', action='store_true', help='whether or not to invert the output (turn white to black and vice versa)')
 
 character_map = {
-    '00 00 00 00': '.',
+    '00 00 00 00': '⢀',
     '00 00 00 01': '⢀',
     '00 00 00 10': '⡀',
     '00 00 00 11': '⣀',
